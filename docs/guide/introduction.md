@@ -10,18 +10,6 @@ nav:
 > 基于React UI组件库.
 
 
-## 示例
-
-#### 链接
-
-[点击链接查看示例](https://rong360.github.io/rong-ui-react/demo/index.html)
-
-#### 扫描二维码体验
-
-<img :src="$withBase('/images/ewm.png')" />
-
-## 使用说明
-
 ### 安装
 
 ```bash
@@ -30,7 +18,6 @@ npm install rong-ui-react --save
 
 ```
 
-### 引入
 
 ```js
 import {Titlebar, Button, Modal} from 'rong-ui-react';
@@ -44,9 +31,26 @@ npm install babel-plugin-import --save-dev
 // .babelrc
 {
   "plugins": [["import", {
-    "libraryName": "rong-ui-react"
+    "libraryName": "rong-ui-react",
+    "libraryDirectory": "es",
+    "style": "css"
   }]]
 }
+
+or 
+// package.json
+"babel": {
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "rong-ui-react",
+        "libraryDirectory": "es",
+        "style": "css"
+      }
+    ]
+  ]
+},
 
 or
 // webpack.config.js
@@ -55,14 +59,13 @@ or
   options: {
     plugins: [
       ["import", {
-        "libraryName": "rong-ui-react"
+        "libraryName": "rong-ui-react",
+        "libraryDirectory": "es",
+        "style": "css"
       }]
     ]
   }
 }
-
-注意：项目需要安装less文件：
-npm install less less-loader --save-dev （低版本可以用less@^2.7.2 less-loader@^4.0.3）
 ```
 
 

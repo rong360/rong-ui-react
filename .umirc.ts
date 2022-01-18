@@ -21,7 +21,7 @@ export default defineConfig({
     type: 'hash'
   },
   // base: `/${repo}/`,
-  // publicPath: `/${repo}/`,
+  publicPath: `/${repo}/`,
   exportStatic: {}, // 将所有路由输出为 HTML 目录结构，以免刷新页面时 404
   dynamicImport: {}, // 拆包 站点过大时可以优化首屏加载速度
   mode: 'site',

@@ -47,9 +47,10 @@ const paths = {
     // .pipe(babel(babelConfig(moduleType))) // 这个项目中用的是father-build,这里就不需要babel
     .pipe(
       through2.obj(function z (file, encoding, next) {
-        this.push(file.clone());
+        // this.push(file.clone());
         // 找到目标
         if (file.path.match(/(\/|\\)style(\/|\\)index\.js/)) {
+          this.push(file.clone())
           const content = file.contents.toString(encoding);
           file.contents = Buffer.from(cssInjection(content)); // 文件内容处理
           file.path = file.path.replace(/index\.js/, 'css.js'); // 文件重命名

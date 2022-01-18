@@ -1,6 +1,6 @@
 ---
 title: Modal 对话框
-order: 1
+order: 0
 group:
   title: 弹窗
   order: 1
