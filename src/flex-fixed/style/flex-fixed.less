@@ -1,0 +1,19 @@
+@flexFixed: r-flexfixed;
+
+.@{flexFixed} {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+  &-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    &>main{
+      display: block;
+      flex: 1;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch; /* 解决ios滑动不流畅问题 */
+    }
+  }
+}

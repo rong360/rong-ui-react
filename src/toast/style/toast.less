@@ -1,0 +1,26 @@
+@toast: r-toast;
+
+.@{toast} {
+  background-color: rgba(0, 0, 0, 0);
+  .r-modal-wrap {
+    background-color: #4c4c4c;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  &-long .r-modal-wrap {
+    width: 226px;
+    min-height: 95px;
+  }
+  &-positive .r-modal-wrap,
+  &-negetive .r-modal-wrap {
+    width: 184px;
+    min-height: 95px;
+  }
+  &-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+}

@@ -1,4 +1,4 @@
-# myapp
+# rong-ui-react
 
 ## Getting Started
 
@@ -20,14 +20,9 @@ Build documentation,
 $ npm run docs:build
 ```
 
-Run test,
+
+Pack library ,
 
 ```bash
-$ npm test
-```
-
-Build library via `father-build`,
-
-```bash
-$ npm run build
+sh release.sh
 ```

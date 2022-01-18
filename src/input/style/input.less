@@ -1,0 +1,212 @@
+@inputCls: r-input;
+
+.@{inputCls} {
+  position: relative;
+  &-inner {
+    border-bottom: 1px solid #f2f2f4;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    position: relative;
+  }
+  &-mode-default &-inner {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  &-mode-to-top &-inner {
+    height: 46px;
+  }
+  &-mode-to-top {
+    margin-top: 20px;
+  }
+  &-mode-to-top&&-focused &-inner,
+  &-mode-to-top&:not(&-empty) &-inner,
+  &-mode-to-top&-error-at-placeholder&-error &-inner {
+    padding-top: 20px;
+  }
+  &-mode-to-top&&-focused &-label,
+  &-mode-to-top&:not(&-empty) &-label,
+  &-mode-to-top&-error-at-placeholder&-error &-label {
+    position: absolute;
+    top: 5px;
+    font-size: 12px;
+    color: #bdbdbd;
+  }
+  &-mode-to-top&:not(&-focused) &-input::-webkit-input-placeholder {
+    color: transparent;
+  }
+
+  &-mode-to-top &-prepend {
+    display: none;
+  }
+  &-mode-to-top&&-focused &-prepend,
+  &-mode-to-top&:not(&-empty) &-prepend {
+    display: block;
+  }
+  &-mode-to-top &-label {
+    font-size: 16px;
+    color: #bdbdbd;
+    position: absolute;
+  }
+  &-mode-to-top &-input {
+    font-size: 16px;
+    line-height: 21px;
+    color: #181c48;
+  }
+  &-mode-default &-label {
+    font-size: 14px;
+    color: #333;
+    line-height: 20px;
+  }
+  &-mode-default&-text-left &-label {
+    margin-right: 23px;
+  }
+  &-mode-default &-input {
+    font-size: 14px;
+    line-height: 20px;
+    color: #333;
+  }
+  &-label-right &-label {
+    text-align: right;
+    padding-right: 10px;
+  }
+  &-label-top {
+    padding-top: 14px;
+  }
+  &-label-top &-label {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+  }
+  &-label {
+    line-height: 1;
+    box-sizing: border-box;
+    margin-right: 10px;
+    transition: all 0.3s ease-out;
+  }
+  &-prepend,
+  &-append {
+    font-size: 16px;
+    color: #acb4c0;
+    position: relative;
+  }
+  &-prepend {
+    padding-right: 5px;
+  }
+  &-append {
+    padding-left: 5px;
+  }
+  &-content {
+    box-sizing: border-box;
+    line-height: 1;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    position: relative;
+  }
+  &-input {
+    outline: none;
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    border: none;
+    box-sizing: border-box;
+    flex: 1;
+    width: 100%;
+    background-color: transparent;
+    z-index: 2;
+    min-height: 20px;
+    word-break: break-all;
+    &[readonly],
+    &[disabled] {
+      color: #999;
+    }
+    &::placeholder {
+      color: #c5c8ce;
+    }
+  }
+  &-readonly &-input,
+  &-disabled &-input {
+    color: #999;
+  }
+  &-placeholder &-input {
+    color: #c8c7cc;
+    font-weight: normal;
+  }
+  &-text-right &-input {
+    text-align: right;
+  }
+  &-text-left &-input {
+    text-align: left;
+  }
+  &-text-right&-show-clear &-input {
+    padding-right: 20px;
+  }
+  &-text-center &-input {
+    text-align: center;
+  }
+  &-show-clear &-input {
+    padding-right: 20px;
+  }
+  &-unit {
+    font-size: 14px;
+    line-height: 1;
+    color: #333;
+    padding-left: 5px;
+    white-space: nowrap;
+  }
+  &-clear {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    line-height: 1;
+    text-align: center;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    display: flex;
+    align-items: center;
+    z-index: 2;
+  }
+  &-clear svg {
+    width: 20x;
+    height: 20x;
+  }
+  &-error &-inner {
+    border-color: #ed4014;
+  }
+  &-error&-mode-default &-inner {
+    margin-bottom: 20px;
+  }
+  &-error-tip {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    line-height: 1;
+    padding-top: 6px;
+    font-size: 12px;
+    color: #ed4014;
+    z-index: 1;
+    text-align: left;
+  }
+  &-error-at-placeholder&-error input,
+  &-error-at-placeholder&-error input::placeholder {
+    color: transparent;
+  }
+  &-hidden {
+    display: none;
+  }
+  &-email-panel {
+    padding: 5px 15px;
+  }
+  &-email-panel--item {
+    line-height: 30px;
+    font-size: 14px;
+    color: #333;
+    font {
+      color: #4084E8;
+    }
+  }
+}

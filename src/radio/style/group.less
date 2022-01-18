@@ -1,0 +1,35 @@
+@radioGroupCls: r-radio-group;
+
+.@{radioGroupCls}-button {
+  display: inline-block;
+  box-sizing: border-box;
+  .r-radio-checked {
+    background-color: #2d8cf0;
+    color: #fff;
+  }
+  .r-radio {
+    border: 1px solid #d9d9d9;
+    border-left: none;
+    margin-right: 0;
+    line-height: 30px;
+    padding: 0 15px;
+  }
+  .r-radio:first-child {
+    border-left: 1px solid #d9d9d9;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  .r-radio:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+  .r-radio-disabled {
+    background-color: #f5f5f5;
+  }
+  .rc-checkbox {
+    display: none;
+  }
+  .rc-checkbox+*{
+    margin: 0;
+  }
+}

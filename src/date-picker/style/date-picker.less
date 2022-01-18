@@ -1,0 +1,20 @@
+@datepickerCls: r-datepicker;
+
+.@{datepickerCls} {
+  &-mode-to-top&-empty {
+    color: transparent;
+  }
+  &-empty {
+    color: #c8c7cc;
+  }
+  &-readonly,
+  &-disabled {
+    color: #999 !important;
+  }
+  min-height: 20px;
+  min-width: 50px;
+}
+.picker[mode='default'] .confirm,
+.picker[mode='default'] .wheel-item[style~='rotateX(0deg);'] {
+  color: #4080e8 !important;
+}

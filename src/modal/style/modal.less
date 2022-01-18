@@ -1,0 +1,85 @@
+@dialogCls: r-modal;
+
+.@{dialogCls} {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(14, 14, 14, 0.6);
+  z-index: 990;
+  &-wrap {
+    position: fixed;
+    width: 270px;
+    font-size: 15px;
+    line-height: 1;
+    background-color: #fff;
+    color: #333;
+    box-sizing: border-box;
+    z-index: 991;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  &-title {
+    text-align: center;
+    line-height: 48px;
+  }
+  &-title::after {
+    display: block;
+    content: "";
+    height: 1px;
+    overflow: hidden;
+    background-color: #d8d9dc;
+  }
+  &-close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: 1;
+    padding: 15px;
+  }
+  &-content {
+    padding: 15px; 
+    text-align: center;
+    line-height: 24px;
+  }
+  &-btn {
+    display: flex;
+    line-height: 45px;
+    border-top: 1px solid #e5e5e5;
+  }
+  &-cancel-btn,
+  &-confirm-btn {
+    flex: 1;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  &-cancel-btn-show&-confirm-btn-show &-cancel-btn {
+    border-right: 1px solid #e5e5e5;
+  }
+  &-close-btn-show&:not(&-title-show) &-content{
+    padding-top: 40px;
+  }
+  &-fade-enter,
+  &-fade-appear {
+    opacity: 0;
+  }
+
+  &-fade-enter-active,
+  &-fade-appear-active {
+    opacity: 1;
+    transition: opacity .3s;
+  }
+
+  &-fade-exit {
+    opacity: 1;
+  }
+  &-fade-exit-active {
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  &-fade-exit-done {
+    display: none;
+  }
+}
+
