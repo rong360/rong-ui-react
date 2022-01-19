@@ -21,8 +21,4 @@ $ npm run docs:build
 ```
 
 
-Pack library ,
-
-```bash
-sh release.sh
-```
+[文档地址](https://rong360.github.io/rong-ui-react)
