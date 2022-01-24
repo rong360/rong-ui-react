@@ -79,21 +79,21 @@ class SelectDate extends React.PureComponent {
     </Consumer>
   }
   componentDidMount () {
-    this.form && this.form._state.fields.push(this)
+    this.form && this.form.addField(this)
     this._state.initialValue = this.state.value
     this._state.isMounted = true
     this.$el = this.selectWrapRef.current
   }
   componentWillUnmount () {
-    this.form && this.form._state.fields.splice(this.form._state.fields.indexOf(this), 1)
+    this.form && this.form.removeField(this)
     this._state.isMounted = false
   }
   get wrapCls () {
     const { value } = this.state
     const { labelPosition, textPosition, mode, className, readonly, disabled } = this.props
-    const _labelPosition = labelPosition || (this.form && this.form.props.labelPosition) || 'left'
-    const _textPosition = textPosition || (this.form && this.form.props.textPosition) || 'left'
-    const _mode = mode || (this.form && this.form.props.mode) || 'default'
+    const _labelPosition = labelPosition || (this.form && this.form.labelPosition) || 'left'
+    const _textPosition = textPosition || (this.form && this.form.textPosition) || 'left'
+    const _mode = mode || (this.form && this.form.mode) || 'default'
     return classNames([
       this.form && 'form-item',
       prefixCls,
@@ -121,8 +121,8 @@ class SelectDate extends React.PureComponent {
     let style = {}
     if (this.props.labelWidth || this.props.labelWidth === 0) {
       style.width = this.props.labelWidth
-    } else if (this.form && (this.form.props.labelWidth || this.form.props.labelWidth === 0)) {
-      style.width = this.form.props.labelWidth
+    } else if (this.form && (this.form.labelWidth || this.form.labelWidth === 0)) {
+      style.width = this.form.labelWidth
     }
     return style
   }
@@ -134,7 +134,7 @@ class SelectDate extends React.PureComponent {
   }
   get arrowStyle () {
     let style = { color: '#666', width: '0.32rem' }
-    return this.props.selectArrowStyle || (this.form && this.form.props.selectArrowStyle) || style
+    return this.props.selectArrowStyle || (this.form && this.form.selectArrowStyle) || style
   }
   get contentCls () {
     return `${prefixCls}-content`
@@ -169,7 +169,7 @@ class SelectDate extends React.PureComponent {
   }
   getShowErrorMsg = memoize((validateState) => {
     return validateState === 'error' &&
-      (this.form ? this.form.props.showMessage && this.props.showMessage : this.props.showMessage)
+      (this.form ? this.form.showMessage && this.props.showMessage : this.props.showMessage)
   })
   onConfirm = (date) => {
     this.setValue(date.value, function () { }, { from: 'select' })
@@ -210,7 +210,7 @@ class SelectDate extends React.PureComponent {
   }
   /* 获取表单数据 */
   getValue () {
-    return { name: this.props.name, value: this.state.value }
+    return { name: this.props.name, value: this.state.value, title: this.props.value }
   }
   setValue (value, callback, options = {}) {
     const opts = Object.assign({ event: null, component: this, value: value }, options)

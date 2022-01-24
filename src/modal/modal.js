@@ -94,7 +94,7 @@ class Modal extends React.PureComponent {
   }
   get wrapCls () {
     const {className, showCancel, showConfirm,  showClose, title} = this.props
-  
+
     return classNames([
       prefixCls,
       className,

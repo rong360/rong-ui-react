@@ -8,13 +8,40 @@ const prefixCls = 'r-form'
 class Form extends React.PureComponent {
   constructor(props) {
     super(props)
-    this.state = { fields: [] }
-    this._state = { fields: [] }
+
+    this.addField = (field) => {
+      this.setState(state => ({
+        fields: state.fields.concat(field)
+      }), () => {
+        this.onFieldsChange(this.state.fields)
+      })
+    }
+
+    this.removeField = (field) => {
+      this.setState(state => {
+        let fields = [...state.fields]
+        fields.splice(fields.indexOf(field), 1)
+        return {
+          fields: fields
+        }
+      }, () => {
+        this.onFieldsChange(this.state.fields)
+      })
+    }
+
+    this.state = {
+      ...this.props,
+      fields: [],
+      addField: this.addField,
+      removeField: this.removeField,
+      onChange: this.onChange
+    }
+
   }
   render () {
     console.log('Form mounted or updated')
     return <div className={this.wrapCls}>
-      <Provider value={this}>{this.props.children}</Provider>
+      <Provider value={this.state}>{this.props.children}</Provider>
     </div>
   }
   get wrapCls () {
@@ -23,26 +50,17 @@ class Form extends React.PureComponent {
       this.props.className
     ])
   }
-  componentDidUpdate () {
-    // let isCompleted = this._state.fields.every(field => {
-    //   if (field.fieldRules.length) {
-    //     return field.state.value !== ''
-    //   } else {
-    //     return true
-    //   }
-    // })
-  }
-  onChange (obj) {
+  onChange = (obj) => {
     this.props.onChange(obj)
+    this.onFieldsChange()
+  }
+  onFieldsChange () {
+    this.props.onFieldsChange(this.state.fields)
     this.checkCompleted()
   }
   checkCompleted () {
-    let isCompleted = this._state.fields.every(field => {
-      if (field.fieldRules.length) {
-        return field.state.value !== ''
-      } else {
-        return true
-      }
+    let isCompleted = this.state.fields.every(field => {
+      return field.fieldRules.length ? field.state.value !== '' : true
     })
     this.props.onComplete({ isCompleted, component: this })
   }
@@ -52,7 +70,7 @@ class Form extends React.PureComponent {
       let validateMessage = []
       let firstInvalidField = null
       let count = 0
-      this._state.fields.forEach(field => {
+      this.state.fields.forEach(field => {
         field.validate('', errors => {
           if (errors) {
             valid = false
@@ -61,7 +79,7 @@ class Form extends React.PureComponent {
             }
             validateMessage.push(errors)
           }
-          if (++count === this._state.fields.length) {
+          if (++count === this.state.fields.length) {
             resolve(valid, errors)
             if (typeof callback === 'function') {
               callback(valid, validateMessage)
@@ -74,7 +92,7 @@ class Form extends React.PureComponent {
   }
   validateOneByOne (callback) {
     return new Promise(resolve => {
-      let fields = [...this._state.fields]
+      let fields = [...this.state.fields]
       function next (fields = []) {
         let field = fields.shift()
         if (field) {
@@ -97,7 +115,7 @@ class Form extends React.PureComponent {
   }
   /* 获取表单数据 */
   getValue () {
-    return this._state.fields.map(field => field.getValue())
+    return this.state.fields.map(field => field.getValue())
   }
   getSerializeValue () {
     let fieldsValue = this.getValue()
@@ -108,7 +126,7 @@ class Form extends React.PureComponent {
     return Object.assign({}, ...fieldsValue.map(obj => ({ [obj.name]: obj.value })))
   }
   resetFields () {
-    this._state.fields.forEach(field => field.resetField())
+    this.state.fields.forEach(field => field.resetField())
   }
 }
 
@@ -144,6 +162,10 @@ setDefaultProps(Form, {
     default: () => { }
   },
   onChange: {
+    type: PropTypes.func,
+    default: () => { }
+  },
+  onFieldsChange: {
     type: PropTypes.func,
     default: () => { }
   },

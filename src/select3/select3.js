@@ -47,7 +47,7 @@ class Select3 extends React.PureComponent {
               </div>}
               <div className={this.contentCls}>
                 {
-                  data.map(item => <div key={item.value} className={classNames([this.selectOptionCls, {active: this.state.value === item.value}])} onClick={(e) => this.onSelect(e, item)}>
+                  data.map(item => <div key={item.value} className={classNames([this.selectOptionCls, { active: this.state.value === item.value }])} onClick={(e) => this.onSelect(e, item)}>
                     {item.text}
                   </div>)
                 }
@@ -72,21 +72,21 @@ class Select3 extends React.PureComponent {
     </Consumer>
   }
   componentDidMount () {
-    this.form && this.form._state.fields.push(this)
+    this.form && this.form.addField(this)
     this._state.initialValue = this.state.value
     this._state.isMounted = true
     this.$el = this.selectWrapRef.current
   }
   componentWillUnmount () {
-    this.form && this.form._state.fields.splice(this.form._state.fields.indexOf(this), 1)
+    this.form && this.form.removeField(this)
     this._state.isMounted = false
   }
   get wrapCls () {
     const { value } = this.state
     const { labelPosition, textPosition, mode, className, readonly } = this.props
-    const _labelPosition = labelPosition || (this.form && this.form.props.labelPosition) || 'left'
-    const _textPosition = textPosition || (this.form && this.form.props.textPosition) || 'left'
-    const _mode = mode || (this.form && this.form.props.mode) || 'default'
+    const _labelPosition = labelPosition || (this.form && this.form.labelPosition) || 'left'
+    const _textPosition = textPosition || (this.form && this.form.textPosition) || 'left'
+    const _mode = mode || (this.form && this.form.mode) || 'default'
     return classNames([
       this.form && 'form-item',
       prefixCls,
@@ -115,8 +115,8 @@ class Select3 extends React.PureComponent {
     let style = {}
     if (this.labelWidth || this.labelWidth === 0) {
       style.width = this.labelWidth
-    } else if (this.form && (this.form.props.labelWidth || this.form.props.labelWidth === 0)) {
-      style.width = this.form.props.labelWidth
+    } else if (this.form && (this.form.labelWidth || this.form.labelWidth === 0)) {
+      style.width = this.form.labelWidth
     }
     return style
   }
@@ -163,12 +163,12 @@ class Select3 extends React.PureComponent {
   }
   get showErrorMsg () {
     return this.state.validateState === 'error' &&
-      (this.form ? this.form.props.showMessage && this.props.showMessage : this.props.showMessage)
+      (this.form ? this.form.showMessage && this.props.showMessage : this.props.showMessage)
   }
   onSelect (e, item) {
-    const {readonly, disabled} = this.props
+    const { readonly, disabled } = this.props
     if (readonly || disabled) return
-    this.setValue(item.value, function() {}, {event: e, from: 'select'})
+    this.setValue(item.value, function () { }, { event: e, from: 'select' })
   }
   getFilterRules (trigger) {
     return this.fieldRules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1)
@@ -178,7 +178,7 @@ class Select3 extends React.PureComponent {
     const { initialValue } = this._state
     const { name, title } = this.props
     const rules = this.getFilterRules(trigger)
-    const isInitialValue = this.isRequired && value!=='' && initialValue === value
+    const isInitialValue = this.isRequired && value !== '' && initialValue === value
 
     if (!this.isRequired || isInitialValue) {
       callback()
@@ -202,11 +202,11 @@ class Select3 extends React.PureComponent {
   }
   resetField () {
     this.setState({ validateState: '', validateMessage: '' })
-    this.setValue(this._state.initialValue, null, {from: 'reset'})
+    this.setValue(this._state.initialValue, null, { from: 'reset' })
   }
   /* 获取表单数据 */
   getValue () {
-    return { name: this.props.name, value: this.state.value }
+    return { name: this.props.name, value: this.state.value, title: this.props.title }
   }
   setValue (value, callback, options = {}) {
     const opts = Object.assign({ event: null, component: this, value: value }, options)

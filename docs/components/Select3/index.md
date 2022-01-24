@@ -5,7 +5,9 @@ group:
   title: 数据录入
 ---
 
-<Alert>用于"男、女" "有、无"等选择，行内展示选择项</Alert>
+<Alert>
+  <p>用于"男、女" "有、无"等选择，行内展示选择项</p>
+</Alert>
 
 #### 组件引入
 ```js
@@ -52,7 +54,9 @@ import { Select3 } from 'rong-ui-react';
 | onChange | 输入框内容变化时的回调 | function({ event, component, value}) | | |
 
 
-<Alert>提示：rules校验规则文档详见https://www.npmjs.com/package/async-validator</Alert>
+<Alert>
+  <p>提示：rules校验规则文档详见https://www.npmjs.com/package/async-validator</p>
+</Alert>
 
 
 ### methods

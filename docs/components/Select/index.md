@@ -51,7 +51,9 @@ import { Select } from 'rong-ui-react';
 | onChange | 输入框内容变化时的回调 | function({ event, component, value}) | | |
 
 
-<Alert>提示：rules校验规则文档详见https://www.npmjs.com/package/async-validator</Alert>
+<Alert>
+  <p>提示：rules校验规则文档详见https://www.npmjs.com/package/async-validator</p>
+</Alert>
 
 
 ### methods

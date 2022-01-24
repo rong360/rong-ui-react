@@ -149,14 +149,14 @@ function FormDemo() {
     type: 'IDCard',
     title: '本人身份证号码',
     name: 'user_id',
-    value: '110101199003014',
+    value: '150303195208075046',
     placeholder: '',
     readonly: 0,
   });
   const [loanTerm, setLoanTerm] = useState({
     title: '贷款期限',
     name: 'loan_term',
-    value: '',
+    value: '2',
     data: [
       {
         text: '1个月',
@@ -282,9 +282,22 @@ function FormDemo() {
     setIsCompleted(isCompleted);
   }, []);
 
+  const [results, setResults] = useState([]);
+
+  const onFieldsChange = useCallback((fields) => {
+    setResults(fields.map((field) => field.getValue()));
+  }, []);
+
   const doSubmit = () => {
     formRef.current.validate((valid, validateMessage) => {
       if (valid) {
+        Modal.create({
+          content: formRef.current.getValue().map((field) => (
+            <p key={field.name} style={{ textAlign: 'left' }}>
+              <span style={{ fontWeight: 'bold' }}>{field.title}:</span> {field.value}
+            </p>
+          )),
+        });
         console.log('getValue', formRef.current.getValue());
         console.log('getSerializeValue', formRef.current.getSerializeValue());
         console.log('getObjectValue', formRef.current.getObjectValue());
@@ -312,15 +325,6 @@ function FormDemo() {
 
   const btnStyle = isCompleted ? styles.btn : Object.assign({}, styles.btn, styles.btnDisabled);
 
-  const [fields, setFields] = useState([]);
-  useEffect(() => {
-    setFields(formRef.current._state.fields);
-  }, []);
-
-  useEffect(() => {
-    // console.log(_count)
-  }, [_count]);
-
   return (
     <div className={styles['page-view']}>
       <Titlebar theme="b" onBack={goHome}>
@@ -334,6 +338,7 @@ function FormDemo() {
         textPosition="left"
         onComplete={onComplete}
         onChange={handleChange}
+        onFieldsChange={onFieldsChange}
       >
         <Input {...user} onChange={userChange} />
         <Input {...age} onChange={ageChange} />
@@ -357,11 +362,13 @@ function FormDemo() {
         </div>
       </Form>
       <div style={styles.results}>
-        {fields.map((item) => (
-          <p key={item.props.title}>
-            {item.props.title}:{item.state.value}
-          </p>
-        ))}
+        {results.map((item) => {
+          return (
+            <p key={item.name}>
+              {item.title}:{item.value}
+            </p>
+          );
+        })}
       </div>
     </div>
   );

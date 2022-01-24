@@ -136,7 +136,7 @@ const InputDemo = () => {
     "type": "IDCard",
     "title": "本人身份证号码",
     "name": "user_id",
-    "value": "110101199003014",
+    "value": "150303195208075046",
     "placeholder": "",
     "readonly": 0
   })

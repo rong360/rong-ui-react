@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 
 
 const create = (options) => {
-  if (typeof options === 'string') options = { content: options }
+  if (typeof options === 'string' || typeof options === 'number') options = { content: options }
 
   let { target, ...other } = options
   let container = target || document.querySelector('#portal-target')

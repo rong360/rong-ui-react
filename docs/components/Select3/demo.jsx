@@ -120,8 +120,8 @@ function Select3Demo () {
 
   const [fields, setFields] = useState([])
   useEffect(() => {
-    setFields(formRef.current._state.fields)
-  }, [])
+    setFields(formRef.current.state.fields)
+  })
   return <div className='select3-page'>
     <Titlebar theme='b' onBack={goHome}>Select3</Titlebar>
     <div style={styles.tips}>标题和选项在同一行展示， 用于性别选择等</div>

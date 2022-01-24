@@ -68,7 +68,7 @@ const options = [
 ]
 
 const RadioDemo = () => {
-  const goHome = useCallback(() => history.push({ pathname: '/' }), [history])
+  const goHome = useCallback(() => {}, [])
   const [count, setCount] = useState(0)
   const [disabled, setDisabled] = useState(true)
   const [value, setValue] = useState(1)

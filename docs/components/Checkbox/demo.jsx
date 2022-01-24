@@ -91,7 +91,7 @@ const interestOptions = [
 ]
 
 const CheckboxDemo = () => {
-  const goHome = useCallback(() => history.push({ pathname: '/' }), [history])
+  const goHome = useCallback(() => {}, [])
   const [count, setCount] = useState(0)
   const [checked, setChecked] = useState(false)
   const [disabled, setDisabled] = useState(false)
