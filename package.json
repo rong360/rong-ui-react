@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "rong-ui-react",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "start": "dumi dev",
     "start:release": "cross-env NODE_START_ENV=release dumi dev",

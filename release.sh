@@ -74,4 +74,4 @@ rm -rf es
 rm -rf lib
 
 cd release
-npm publish
+#npm publish
