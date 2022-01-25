@@ -340,7 +340,7 @@ function FormDemo() {
         onChange={handleChange}
         onFieldsChange={onFieldsChange}
       >
-        <Input {...user} onChange={userChange} />
+        <Input {...user} showEdit={true} onChange={userChange} />
         <Input {...age} onChange={ageChange} />
         <Input {...amount} onChange={amountChange} />
         <Input {...phone} onChange={phoneChange} />

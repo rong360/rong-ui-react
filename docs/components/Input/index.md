@@ -33,6 +33,7 @@ import { Input } from 'rong-ui-react';
 | required | 是否必填 | boolean | | true |
 | rules | 类iview风格的校验规则 | array | | [{required: true, message:'xxx不能为空', trigger:'blur'}] |
 | showMessage | 显示校验结果 | boolean | | true |
+| showEdit | 显示可编辑icon | boolean | | false |
 | emailList | 邮件后缀列表<br/><font size=1>(type='email'可用)</font> | array | | |
 | labelWidth | lebel标签宽度 | string | 如 `150px` `10rem`等 ||
 | labelPosition | label标签对齐方式 | string | `left` `right` `top`  | left |

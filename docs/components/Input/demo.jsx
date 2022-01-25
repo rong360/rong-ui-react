@@ -13,7 +13,11 @@ const styles = {
   },
   exampleItemTitle: {
     fontSize: '14px',
-    marginTop: '20px',
+    marginTop: '30px',
+  },
+  exampleItemResult: {
+    fontSize: '12px',
+    color: '#666'
   },
   verifyCodeBtn: {
     display: 'inline-block',
@@ -167,25 +171,32 @@ const InputDemo = () => {
   return <div className='input-page'>
     <Titlebar theme='b' onBack={goHome}>Input</Titlebar>
 
-    <div style={styles.exampleItemTitle}>文本 type="text" --- {user.value}</div>
+    <div style={styles.exampleItemTitle}>文本 type="text"</div>
     <Input {...user} onChange={userChange}/>
+    <div style={styles.exampleItemResult}>{user.title}:{user.value}</div>
 
-    <div style={styles.exampleItemTitle}>数字(整型) type="number" --- {age.value}</div>
+    <div style={styles.exampleItemTitle}>数字(整型) type="number"</div>
     <Input {...age} onChange={ageChange} />
+    <div style={styles.exampleItemResult}>{age.title}:{age.value}</div>
 
-    <div style={styles.exampleItemTitle}>数字(浮点) type="number" --- {amount.value}</div>
+    <div style={styles.exampleItemTitle}>数字(浮点) type="number"</div>
     <Input {...amount} onChange={amountChange} prepend='RP'/>
+    <div style={styles.exampleItemResult}>{amount.title}:{amount.value}</div>
 
-    <div style={styles.exampleItemTitle}>电话 type="tel" --- {phone.value}</div>
+    <div style={styles.exampleItemTitle}>电话 type="tel"</div>
     <Input {...phone} onChange={phoneChange} prepend='+91'/>
     <Input {...OTP} append={verifyCodeBtnNode}/>
+    <div style={styles.exampleItemResult}>{phone.title}:{phone.value}</div>
 
-    <div style={styles.exampleItemTitle}>邮箱 type="email" --- {email.value}</div>
+    <div style={styles.exampleItemTitle}>邮箱 type="email"</div>
     <Input {...email} onChange={emailChange} />
+    <div style={styles.exampleItemResult}>{email.title}:{email.value}</div>
 
-    <div style={styles.exampleItemTitle}>国内身份证 type="IDCard" --- {IDCard.value}</div>
+    <div style={styles.exampleItemTitle}>国内身份证 type="IDCard"</div>
     <Input {...IDCard} onChange={IDCardChange} />
+    <div style={styles.exampleItemResult}>{IDCard.title}:{IDCard.value}</div>
 
+    <br/><br/>
   </div>
 }
 

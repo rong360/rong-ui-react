@@ -15,8 +15,7 @@ class Input extends React.PureComponent {
       validateState: '',
       validateMessage: '',
       focused: false,
-      showEmailPan: false,
-      showInput: false
+      showEmailPan: false
     }
     // 不需要驱动视图更新的数据放这里
     this._state = {
@@ -45,19 +44,16 @@ class Input extends React.PureComponent {
         this.form = context
         console.log('Input mounted or updated')
         const { title, name, type, prepend, append, maxlength, disabled, readonly, autofocus } = this.props
-        const { showInput, value, validateMessage } = this.state
+        const { value, validateMessage } = this.state
         return (
           <div className={this.wrapCls} ref={this.inputWrapRef}>
             <div className={this.innerCls}>
-              <label className={this.labelCls} style={this.labelStyle}>{title}</label>
+              {title && <label className={this.labelCls} style={this.labelStyle}>{title}</label>}
               {prepend && <div className={this.prependCls}>
                 {prepend}
               </div>}
               <div className={this.contentCls}>
-                {!showInput && <div className={this.inputCls} onClick={this.onMaskClick}>
-                  {value || this.placeholderText}
-                </div>}
-                {showInput && <input
+                <input
                   type={this.inputType}
                   name={name}
                   value={value}
@@ -78,7 +74,8 @@ class Input extends React.PureComponent {
                   onBlur={this.onFieldBlur}
                   onCompositionStart={this.onFieldCompositionStart}
                   onCompositionEnd={this.onFieldCompositionEnd}
-                />}
+                />
+                {this.showEditIcon && <div className={classNames(["input-edit", this.inputCls])}><span className="placeholder">{value}</span><span className="edit-icon"></span></div>}
                 {this.showClear && <span className={this.clearCls} onClick={this.onClear}><svg width="14px" height="14px" style={this.clearStyle} viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                   <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(-346.000000, -238.000000)" fill={this.clearStyle.color}>
@@ -116,7 +113,7 @@ class Input extends React.PureComponent {
   }
   get wrapCls () {
     const { focused, value } = this.state
-    const { type, labelPosition, textPosition, mode, className, readonly } = this.props
+    const { type, labelPosition, textPosition, mode, className, readonly, showEdit } = this.props
     const _labelPosition = labelPosition || (this.form && this.form.labelPosition) || 'left'
     const _textPosition = textPosition || (this.form && this.form.textPosition) || 'left'
     const _mode = mode || (this.form && this.form.mode) || 'default'
@@ -136,7 +133,8 @@ class Input extends React.PureComponent {
         [`${prefixCls}-email`]: type === 'email',
         [`${prefixCls}-required`]: this.isRequired,
         [`${prefixCls}-readonly`]: !!readonly,
-        [`${prefixCls}-placeholder`]: value === ''
+        [`${prefixCls}-placeholder`]: value === '',
+        [`${prefixCls}-show-edit`]: showEdit
       }
     ])
   }
@@ -246,6 +244,11 @@ class Input extends React.PureComponent {
     return this.props.type === 'email' && showEmailPan &&
       (this.filteredEmailList.length > 1 || (this.filteredEmailList.length === 1 && this.filteredEmailList[0] !== currEmailSuffix))
   }
+  get showEditIcon () {
+    const { focused, value } = this.state
+    const { showEdit } = this.props
+    return showEdit && !focused && value != ''
+  }
   // input添加dataset数据，外部可以通过e.target.dataset获取
   dataset () {
     let obj = {}
@@ -253,12 +256,6 @@ class Input extends React.PureComponent {
       if (key.startsWith('data-')) obj[key] = this.props[key]
     }
     return obj
-  }
-  onMaskClick = e => {
-    if (this.props.readonly || this.props.disabled) return
-    this.setState({ showInput: true }, () => {
-      this.inputRef.current.focus()
-    })
   }
   onFieldInput = e => {
     this.setState({ validateState: '', validateMessage: '' })
@@ -320,7 +317,7 @@ class Input extends React.PureComponent {
     }, { event: e, from: 'blur' })
 
     this._state.blurTimer = setTimeout(() => {
-      this._state.isMounted && this.setState({ focused: false, showInput: false, showEmailPan: false })
+      this._state.isMounted && this.setState({ focused: false, showEmailPan: false })
     }, 200)
   }
   onClear = e => {
@@ -449,6 +446,9 @@ setDefaultProps(Input, {
   },
   inputClearStyle: {
     type: PropTypes.object
+  },
+  showEdit: {
+    type: PropTypes.bool
   },
   // 是否显示校验错误信息
   showMessage: {
