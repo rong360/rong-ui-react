@@ -46,5 +46,6 @@ Titlebar.propTypes = {
   showBackto: PropTypes.bool,
   backArrowStyle: PropTypes.object
 }
+Titlebar.displayName = 'Titlebar'
 
 export default Titlebar

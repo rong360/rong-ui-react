@@ -271,7 +271,7 @@ class Select2 extends React.PureComponent {
   }
   /* 获取表单数据 */
   getValue () {
-    return { name: this.props.name, value: this.state.value, title: this.props.value }
+    return { name: this.props.name, value: this.state.value, title: this.props.title }
   }
   setValue (value, callback, options = {}) {
     const opts = Object.assign({ event: null, component: this, value: value }, options)
