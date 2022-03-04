@@ -40,7 +40,10 @@ class Modal extends React.PureComponent {
   }
   onExited = () => {
     this.isMount = false
-    this.props.fromInstance && ReactDOM.unmountComponentAtNode(this.props.target)
+    if (this.props.fromInstance) {
+      ReactDOM.unmountComponentAtNode(this.props.target)
+      document.body.removeChild(this.props.target)
+    }
   }
   onCancel = (e) => {
     this.props.onCancel && this.props.onCancel.call(this, e)

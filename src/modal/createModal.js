@@ -11,7 +11,7 @@ const create = (options) => {
   let modalRef = React.createRef()
   if (!container) {
     container = document.createElement('div')
-    container.id = 'portal-target'
+    container.id = 'portal-target-' + new Date().getTime()
     document.body.appendChild(container)
   }
   if (!other.onConfirm) other.onConfirm = function () { this.remove() }
