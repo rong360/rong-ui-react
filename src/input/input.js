@@ -72,8 +72,6 @@ class Input extends React.PureComponent {
                   onChange={this.onFieldChange}
                   onFocus={this.onFieldFocus}
                   onBlur={this.onFieldBlur}
-                  onCompositionStart={this.onFieldCompositionStart}
-                  onCompositionEnd={this.onFieldCompositionEnd}
                 />
                 {this.showEditIcon && <div className={classNames(["input-edit", this.inputCls])}><span className="placeholder">{value}</span><span className="edit-icon"></span></div>}
                 {this.showClear && <span className={this.clearCls} onClick={this.onClear}><svg width="14px" height="14px" style={this.clearStyle} viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -258,83 +256,66 @@ class Input extends React.PureComponent {
     return obj
   }
   onFieldInput = e => {
-    this.setState({ validateState: '', validateMessage: '' })
     let iptValue = e.target.value
-    let iptPrevValue = e.target.prevValue
     let { type, maxlength, fixed } = this.props
 
+    this.setState({ validateState: '', validateMessage: '' })
+
     if (type === 'number') {
+      let iptPrevValue = e.target.prevValue
       // 修复input 属性为 number，maxlength不起作用
       if (maxlength && iptValue.length > maxlength) {
-        iptValue = iptValue.slice(0, maxlength)
+        e.target.value = iptValue.slice(0, maxlength)
       }
       // 限制小数位数
       let dotPos = iptValue.indexOf('.')
-      if (fixed > 0 && dotPos > -1) iptValue = iptValue.substring(0, dotPos + fixed + 1)
-      // 解决ios输入非数字时value清空问题
-      if (e.nativeEvent && e.nativeEvent.data && e.nativeEvent.inputType) {
-        let isNotNumber = !/[0-9]|\./.test(e.nativeEvent.data) && e.nativeEvent.inputType !== 'deleteContentBackward' // 键值为非数字，并且不是后退键
-        let isDoubleDot = e.nativeEvent.data === '.' && iptPrevValue.includes('.') // 输入两个小数点
-        let isIntDot = fixed <= 0 && e.nativeEvent.data === '.' // 要求是整数但输入了小数点
-        if (isNotNumber || isDoubleDot || isIntDot) iptValue = iptPrevValue
+      if (dotPos > -1) {
+        e.target.value = fixed > 0 ? iptValue.substring(0, dotPos + fixed + 1) : iptValue.substring(0, dotPos)
       }
-      // 整数时先清空，防止展示异常
-      if (fixed <= 0) e.target.value = ''
+      // 解决ios输入非数字时value清空问题
+      let isBackSpace = e.nativeEvent && e.nativeEvent.inputType == 'deleteContentBackward'
+      if (iptValue == '' && iptPrevValue != '' && !isBackSpace) {
+        e.target.value = iptPrevValue
+      } else if (iptValue == '' && iptPrevValue == '') { // 第一个code为非数字
+        e.target.value = ''
+      }
+      e.target.prevValue = e.target.value
     } else if (type === 'tel') {
-      iptValue = telephoneClearNonNumbers(iptValue)
+      e.target.value = telephoneClearNonNumbers(iptValue)
     } else if (type === 'IDCard') {
-      iptValue = IDCardClearNonNumbers(iptValue)
+      e.target.value = IDCardClearNonNumbers(iptValue)
     }
-
-    if ((type === 'text' || type === 'email') && this._state.typing) return // 正在输入中文时不执行后面的代码
-
-    e.target.value = iptValue
-    e.target.prevValue = iptValue
+    this.setValue(e.target.value, () => { }, { event: e, from: 'input' })
   }
   // React的onInput和onChange并没有多少区别，其作用都是在用户持续输入的时候触发(先onInput,后onChange)，不在失去获取或者失去焦点的时候触发。
-  onFieldChange = e => {
-    let iptValue = e.target.value
-    this.setValue(iptValue, function () {
-      this.props.onInput({ event: e, component: this, value: iptValue })
-    }, { event: e, from: 'change' })
-  }
+  onFieldChange = e => { }
   onFieldFocus = e => {
-    let { readonly, disabled, type } = this.props
+    let { readonly, disabled, type, onFocus } = this.props
     let iptValue = e.target.value
     if (readonly || disabled) return
-    e.target.prevValue = iptValue
-    e.target.lastValue = iptValue
     this.setState({ focused: true })
-    this.props.onFocus({ event: e, component: this, value: iptValue })
+    onFocus({ event: e, component: this, value: iptValue })
     type === 'email' && this.setState({ showEmailPan: true })
+    e.target.prevValue = e.target.value
   }
   onFieldBlur = e => {
+    if (!this._state.isMounted) return
     let iptValue = e.target.value
-    let { onBlur } = this.props
-
-    this.setValue(iptValue, function () {
-      onBlur({ event: e, component: this, value: iptValue })
-    }, { event: e, from: 'blur' })
-
+    let { onBlur, type } = this.props
+    e.persist()
+    if (type === 'number') e.target.value = iptValue // 防止失去焦点时最后一位是小数点，如"666."
     this._state.blurTimer = setTimeout(() => {
-      this._state.isMounted && this.setState({ focused: false, showEmailPan: false })
+      this.setValue(e.target.value, null, { event: e, from: 'blur' })
+      this.setState({ focused: false, showEmailPan: false })
     }, 200)
   }
   onClear = e => {
     if (this._state.blurTimer) clearTimeout(this._state.blurTimer)
-    this.setValue('', function () {
-      this.inputRef.current.focus()
-    }, { event: e })
+    this.setValue('', () => this.inputRef.current.focus(), { event: e })
   }
   onEmailClick = e => {
     const value = e.target.innerText
-    this.setValue(value, null, { event: e })
-  }
-  onFieldCompositionStart = e => {
-    this._state.typing = true // 输入中文前
-  }
-  onFieldCompositionEnd = e => {
-    this._state.typing = false // 输入中文后
+    this.inputRef.current.value = value
   }
   getFilterRules (trigger) {
     return this.fieldRules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1)
@@ -383,12 +364,14 @@ class Input extends React.PureComponent {
     return { name: this.props.name, value: this.state.value, title: this.props.title }
   }
   setValue (value, callback, options = {}) {
+    if (!this._state.isMounted) return
     const opts = Object.assign({ event: null, component: this, value: value }, options)
     const { from } = options
 
-    this._state.isMounted && this.setState({ value: value }, () => {
+    this.setState({ value: value }, () => {
       this.props.onChange(opts)
       this.form && this.form.onChange(opts)
+      from === 'blur' && this.props.onBlur(opts)
       callback && callback.call(this)
       if (from === 'blur' || from === 'reset') {
         if (this._state.validateDisabled) {
@@ -463,10 +446,6 @@ setDefaultProps(Input, {
     type: PropTypes.bool
   },
   onChange: {
-    type: PropTypes.func,
-    default: () => { }
-  },
-  onInput: {
     type: PropTypes.func,
     default: () => { }
   },
