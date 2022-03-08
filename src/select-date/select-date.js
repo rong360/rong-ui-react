@@ -155,14 +155,8 @@ class SelectDate extends React.PureComponent {
   }
   // isRequired
   get isRequired () {
-    return this.getIsRequired(this.props.required)
+    return this.props.required && this.fieldRules.length > 0
   }
-  getIsRequired = memoize((required) => {
-    if (required === false) {
-      return false
-    }
-    return this.fieldRules.some(item => item.required === true)
-  })
   // showErrorMsg
   get showErrorMsg () {
     return this.getShowErrorMsg(this.state.validateState)
@@ -264,7 +258,8 @@ setDefaultProps(SelectDate, {
     type: PropTypes.array
   },
   required: {
-    type: PropTypes.bool
+    type: PropTypes.bool,
+    default: true
   },
   onChange: {
     type: PropTypes.func,

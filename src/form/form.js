@@ -60,7 +60,8 @@ class Form extends React.PureComponent {
   }
   checkCompleted () {
     let isCompleted = this.state.fields.every(field => {
-      return field.fieldRules.length ? field.state.value !== '' : true
+      // return field.fieldRules.length ? field.state.value !== '' : true
+      return field.isRequired && field.state.value == '' ? false : true
     })
     this.props.onComplete({ isCompleted, component: this })
   }

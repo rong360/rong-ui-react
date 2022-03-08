@@ -1,5 +1,5 @@
 import { useCallback, useState, useRef, useEffect, useReducer } from 'react';
-import { Titlebar, Form, Input, Select, Modal } from 'rong-ui-react';
+import { Titlebar, Form, Input, Select2, Modal } from 'rong-ui-react';
 
 const styles = {
   results: {
@@ -38,7 +38,7 @@ function FormDemo() {
     type: 'text',
     title: '本人姓名',
     name: 'bureau_user_name',
-    value: 'zyx',
+    value: '',
     placeholder: '',
     readonly: 0,
     maxlength: 6,
@@ -88,11 +88,7 @@ function FormDemo() {
         validator(rule, value, callback, source, options) {
           let { component } = options;
           if (value > 10000) {
-            component.setValue('10000');
-            // fields渲染异常时强制页面渲染
-            setTimeout(() => {
-              forceUpdate();
-            }, 0);
+            component.setValue('10000', () => {}, {from: 'validator'});
             callback(new Error('最大申请金额为10000元，已为你自动变更为10000元'));
           } else {
             callback();
@@ -156,7 +152,7 @@ function FormDemo() {
   const [loanTerm, setLoanTerm] = useState({
     title: '贷款期限',
     name: 'loan_term',
-    value: '2',
+    value: '',
     data: [
       {
         text: '1个月',
@@ -192,16 +188,12 @@ function FormDemo() {
                   const { component } = options;
                   const errors = [];
                   if (value > 12) {
-                    component.setValue('12');
+                    component.setValue('12', () => {}, {from: 'validator'});
                     errors.push('贷款期限最长12个月，以为您变更为12个月');
                   } else if (value < 3) {
-                    component.setValue('3');
+                    component.setValue('3', () => {}, {from: 'validator'});
                     errors.push('贷款期限最短3个月，以为您变更为3个月');
                   }
-                  // component调用setValue后如果fields渲染异常可强制页面渲染
-                  setTimeout(() => {
-                    forceUpdate();
-                  }, 0);
                   callback(errors);
                 },
                 trigger: 'blur',
@@ -346,7 +338,7 @@ function FormDemo() {
         <Input {...phone} onChange={phoneChange} />
         <Input {...email} onChange={emailChange} />
         <Input {...IDCard} onChange={IDCardChange} />
-        <Select {...loanTerm} onChange={loanTermChange} />
+        <Select2 {...loanTerm} onChange={loanTermChange} />
         <div style={styles.btnWrap}>
           <div style={btnStyle} onClick={doSubmit}>
             <p>提交（{isCompleted ? '完成' : '未完成'}）</p>

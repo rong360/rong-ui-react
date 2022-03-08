@@ -184,10 +184,7 @@ class Select extends React.PureComponent {
     return [].concat(rules ? rules : defaultRules)
   }
   get isRequired () {
-    if (this.props.required === false) {
-      return false
-    }
-    return this.fieldRules.some(item => item.required === true)
+    return this.props.required && this.fieldRules.length > 0
   }
   get showErrorMsg () {
     return this.state.validateState === 'error' &&
@@ -228,7 +225,6 @@ class Select extends React.PureComponent {
     const { name, title } = this.props
     const rules = this.getFilterRules(trigger)
     const isInitialValue = this.isRequired && value !== '' && initialValue === value
-
     if (!this.isRequired || isInitialValue) {
       callback()
       return true
@@ -319,7 +315,8 @@ setDefaultProps(Select, {
     type: PropTypes.array
   },
   required: {
-    type: PropTypes.bool
+    type: PropTypes.bool,
+    default: true
   },
   onChange: {
     type: PropTypes.func,

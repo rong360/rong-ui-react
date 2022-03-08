@@ -205,10 +205,7 @@ class Input extends React.PureComponent {
     return [].concat(rules ? rules : defaultRules)
   }
   get isRequired () {
-    if (this.props.required === false) {
-      return false
-    }
-    return this.fieldRules.some(item => item.required === true)
+    return this.props.required && this.fieldRules.length > 0
   }
   get showErrorMsg () {
     return this.state.validateState === 'error' &&
@@ -279,12 +276,14 @@ class Input extends React.PureComponent {
       } else if (iptValue == '' && iptPrevValue == '') { // 第一个code为非数字
         e.target.value = ''
       }
+
       e.target.prevValue = e.target.value
     } else if (type === 'tel') {
       e.target.value = telephoneClearNonNumbers(iptValue)
     } else if (type === 'IDCard') {
       e.target.value = IDCardClearNonNumbers(iptValue)
     }
+
     this.setValue(e.target.value, () => { }, { event: e, from: 'input' })
   }
   // React的onInput和onChange并没有多少区别，其作用都是在用户持续输入的时候触发(先onInput,后onChange)，不在失去获取或者失去焦点的时候触发。
@@ -299,13 +298,20 @@ class Input extends React.PureComponent {
     e.target.prevValue = e.target.value
   }
   onFieldBlur = e => {
-    if (!this._state.isMounted) return
     let iptValue = e.target.value
     let { onBlur, type } = this.props
     e.persist()
+
     if (type === 'number') e.target.value = iptValue // 防止失去焦点时最后一位是小数点，如"666."
+
     this._state.blurTimer = setTimeout(() => {
-      this.setValue(e.target.value, null, { event: e, from: 'blur' })
+      if (!this._state.isMounted) return
+
+      if (!this._state.setValueFromValidator) {
+        this.setValue(e.target.value, () => this.validate('blur'), { event: e, from: 'blur' })
+      }
+      this._state.setValueFromValidator = false
+
       this.setState({ focused: false, showEmailPan: false })
     }, 200)
   }
@@ -321,10 +327,10 @@ class Input extends React.PureComponent {
     return this.fieldRules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1)
   }
   validate (trigger, callback = function () { }) {
-    // 防止blur后直接点击btn重复调用validate方法
-    const timeNow = new Date().getTime()
-    if (this._state.preValidateTime && (timeNow - this._state.preValidateTime) < 50) return
-    this._state.preValidateTime = timeNow
+    if (this._state.validateDisabled) {
+      this._state.validateDisabled = false
+      return
+    }
 
     const { value } = this.state
     const { initialValue } = this._state
@@ -337,14 +343,13 @@ class Input extends React.PureComponent {
       return true
     }
 
-    this._state.validateDisabled = false
-
     const prop = name || title || 'prop'
     const descriptor = {}
     descriptor[prop] = rules
     const validator = new AsyncValidator(descriptor)
     const model = {}
     model[prop] = value
+
     validator.validate(model, { first: true, suppressWarning: true, component: this }).then(() => {
       this.setState({ validateState: 'success', validateMessage: '' })
       callback('')
@@ -364,22 +369,16 @@ class Input extends React.PureComponent {
     return { name: this.props.name, value: this.state.value, title: this.props.title }
   }
   setValue (value, callback, options = {}) {
-    if (!this._state.isMounted) return
     const opts = Object.assign({ event: null, component: this, value: value }, options)
     const { from } = options
+    // 外部validator校验函数中调用component.setValue更新值时，blur时不做校验
+    if (from === 'validator') this._state.setValueFromValidator = true
 
     this.setState({ value: value }, () => {
       this.props.onChange(opts)
       this.form && this.form.onChange(opts)
       from === 'blur' && this.props.onBlur(opts)
       callback && callback.call(this)
-      if (from === 'blur' || from === 'reset') {
-        if (this._state.validateDisabled) {
-          this._state.validateDisabled = false
-        } else {
-          this.validate('blur')
-        }
-      }
     })
   }
 }
@@ -443,7 +442,8 @@ setDefaultProps(Input, {
     type: PropTypes.array
   },
   required: {
-    type: PropTypes.bool
+    type: PropTypes.bool,
+    default: true
   },
   onChange: {
     type: PropTypes.func,

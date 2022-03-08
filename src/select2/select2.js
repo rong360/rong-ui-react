@@ -186,10 +186,7 @@ class Select2 extends React.PureComponent {
     return [].concat(rules ? rules : defaultRules)
   }
   get isRequired () {
-    if (this.props.required === false) {
-      return false
-    }
-    return this.fieldRules.some(item => item.required === true)
+    return this.props.required && this.fieldRules.length > 0
   }
   get showErrorMsg () {
     return this.state.validateState === 'error' &&
@@ -328,7 +325,8 @@ setDefaultProps(Select2, {
     type: PropTypes.array
   },
   required: {
-    type: PropTypes.bool
+    type: PropTypes.bool,
+    default: true
   },
   onChange: {
     type: PropTypes.func,
