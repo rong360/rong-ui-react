@@ -86,13 +86,13 @@ function FormDemo() {
       },
       {
         validator(rule, value, callback, source, options) {
-          let { component } = options;
-          if (value > 10000) {
-            component.setValue('10000', () => {}, {from: 'validator'});
-            callback(new Error('最大申请金额为10000元，已为你自动变更为10000元'));
-          } else {
-            callback();
-          }
+          // let { component } = options;
+          // if (value > 10000) {
+          //   component.setValue('10000', () => {}, {validateDisabled: true});
+          //   callback(new Error('最大申请金额为10000元，已为你自动变更为10000元'));
+          //   return
+          // }
+          callback();
         },
         trigger: 'blur',
       },
@@ -178,6 +178,15 @@ function FormDemo() {
             value: '',
             unit: '个月',
             placeholder: '请输入您期望的贷款期限',
+            onChange: ({ event, component, value }) => {
+              if (value > 12) {
+                component.setValue('12')
+                component.setState({
+                  validateState: 'error',
+                  validateMessage: '贷款期限最长12个月，以为您变更为12个月',
+                });
+              }
+            },
             rules: [
               {
                 required: true,
@@ -187,13 +196,13 @@ function FormDemo() {
                 validator(rule, value, callback, source, options) {
                   const { component } = options;
                   const errors = [];
-                  if (value > 12) {
-                    component.setValue('12', () => {}, {from: 'validator'});
-                    errors.push('贷款期限最长12个月，以为您变更为12个月');
-                  } else if (value < 3) {
-                    component.setValue('3', () => {}, {from: 'validator'});
-                    errors.push('贷款期限最短3个月，以为您变更为3个月');
-                  }
+                  // if (value > 12) {
+                  //   component.setValue('12', () => {}, {validateDisabled: true});
+                  //   errors.push('贷款期限最长12个月，以为您变更为12个月');
+                  // } else if (value < 3) {
+                  //   component.setValue('3', () => {}, {validateDisabled: true});
+                  //   errors.push('贷款期限最短3个月，以为您变更为3个月');
+                  // }
                   callback(errors);
                 },
                 trigger: 'blur',
@@ -241,6 +250,14 @@ function FormDemo() {
   );
   const amountChange = useCallback(
     ({ event, component, value }) => {
+      if (value > 10000) {
+        value = '10000'
+        component.setValue(value)
+        component.setState({
+          validateState: 'error',
+          validateMessage: '最大申请金额为10000元，已为你自动变更为10000元',
+        });
+      }
       setAmount(Object.assign({}, amount, { value: value }));
     },
     [amount],
@@ -303,6 +320,13 @@ function FormDemo() {
   const doSubmit2 = () => {
     formRef.current.validateOneByOne((valid, validateMessage) => {
       if (valid) {
+        Modal.create({
+          content: formRef.current.getValue().map((field) => (
+            <p key={field.name} style={{ textAlign: 'left' }}>
+              <span style={{ fontWeight: 'bold' }}>{field.title}:</span> {field.value}
+            </p>
+          )),
+        });
         console.log('getValue', formRef.current.getValue());
         console.log('getSerializeValue', formRef.current.getSerializeValue());
         console.log('getObjectValue', formRef.current.getObjectValue());

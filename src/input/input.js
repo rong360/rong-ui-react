@@ -20,7 +20,7 @@ class Input extends React.PureComponent {
     // 不需要驱动视图更新的数据放这里
     this._state = {
       initialValue: '',
-      validateDisabled: false,
+      validateDisabled: false, // true: blur时不做校验
       blurTimer: null,
       typing: false, // 键盘输入中文
       preValidateTime: '',
@@ -307,10 +307,10 @@ class Input extends React.PureComponent {
     this._state.blurTimer = setTimeout(() => {
       if (!this._state.isMounted) return
 
-      if (!this._state.setValueFromValidator) {
-        this.setValue(e.target.value, () => this.validate('blur'), { event: e, from: 'blur' })
-      }
-      this._state.setValueFromValidator = false
+      this.setValue(e.target.value, () => {
+        if (!this._state.validateDisabled) this.validate('blur')
+        this._state.validateDisabled = false
+      }, { event: e, from: 'blur' })
 
       this.setState({ focused: false, showEmailPan: false })
     }, 200)
@@ -327,11 +327,6 @@ class Input extends React.PureComponent {
     return this.fieldRules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1)
   }
   validate (trigger, callback = function () { }) {
-    if (this._state.validateDisabled) {
-      this._state.validateDisabled = false
-      return
-    }
-
     const { value } = this.state
     const { initialValue } = this._state
     const { name, title } = this.props
@@ -360,9 +355,8 @@ class Input extends React.PureComponent {
     });
   }
   resetField () {
-    this._state.validateDisabled = true
     this.setState({ validateState: '', validateMessage: '' })
-    this.setValue(this._state.initialValue, null, { from: 'reset' })
+    this.setValue(this._state.initialValue, null, { from: 'reset', validateDisabled: true })
   }
   /* 获取表单数据 */
   getValue () {
@@ -370,9 +364,9 @@ class Input extends React.PureComponent {
   }
   setValue (value, callback, options = {}) {
     const opts = Object.assign({ event: null, component: this, value: value }, options)
-    const { from } = options
-    // 外部validator校验函数中调用component.setValue更新值时，blur时不做校验
-    if (from === 'validator') this._state.setValueFromValidator = true
+    const { from, validateDisabled } = options
+
+    if (validateDisabled) this._state.validateDisabled = true
 
     this.setState({ value: value }, () => {
       this.props.onChange(opts)

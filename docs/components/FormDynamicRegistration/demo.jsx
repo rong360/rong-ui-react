@@ -135,6 +135,15 @@ let data = [
     fixed: 2,
     readonly: 0,
     maxlength: 8,
+    onChange: ({ event, component, value }) => {
+      if (value > 10000) {
+        component.setValue('10000')
+        component.setState({
+          validateState: 'error',
+          validateMessage: '最大申请金额为10000元，已为你自动变更为10000元',
+        });
+      }
+    }
   },
   {
     rely_policy_id: 0,
@@ -365,6 +374,15 @@ let data = [
     desc: '',
     value: '7000',
     readonly: 0,
+    onChange: ({ event, component, value }) => {
+      if (value > 60000) {
+        component.setValue('60000')
+        component.setState({
+          validateState: 'error',
+          validateMessage: '月工资最多为60000元，已为你自动变更为60000元',
+        });
+      }
+    }
   },
   {
     rely_policy_id: '26489',
@@ -609,6 +627,13 @@ function FormDemo() {
   const doSubmit2 = () => {
     formRef.current.validateOneByOne((valid, validateMessage) => {
       if (valid) {
+        Modal.create({
+          content: formRef.current.getValue().map((field) => (
+            <p key={field.name} style={{ textAlign: 'left' }}>
+              <span style={{ fontWeight: 'bold' }}>{field.title}:</span> {field.value}
+            </p>
+          )),
+        });
         console.log('getValue', formRef.current.getValue());
         console.log('getSerializeValue', formRef.current.getSerializeValue());
         console.log('getObjectValue', formRef.current.getObjectValue());
