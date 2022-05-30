@@ -383,7 +383,7 @@ setDefaultProps(Input, {
     default: 'text'
   },
   title: {
-    type: PropTypes.string
+    type: PropTypes.node
   },
   value: {
     type: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -453,6 +453,9 @@ setDefaultProps(Input, {
   },
   mode: {
     type: PropTypes.string
+  },
+  append: {
+    type: PropTypes.node
   }
 })
 

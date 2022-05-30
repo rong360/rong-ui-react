@@ -1,5 +1,6 @@
-import { useCallback, useState, useRef, useEffect, useReducer } from 'react';
-import { Titlebar, Form, Input, Select2, Modal } from 'rong-ui-react';
+import { useCallback, useState, useRef, useEffect, useReducer, useMemo } from 'react';
+import { Titlebar, Form, Input, Select2, Modal, Area, FlexFixed } from 'rong-ui-react';
+import areaList from './areaCode';
 
 const styles = {
   results: {
@@ -59,7 +60,7 @@ function FormDemo() {
   });
   const [age, setAge] = useState({
     type: 'number',
-    title: '年龄',
+    title: <span>年龄<font color='red' onClick={() => {alert(0)}}>icon</font></span>,
     name: 'age',
     value: '23',
     placeholder: '',
@@ -180,7 +181,7 @@ function FormDemo() {
             placeholder: '请输入您期望的贷款期限',
             onChange: ({ event, component, value }) => {
               if (value > 12) {
-                component.setValue('12')
+                component.setValue('12');
                 component.setState({
                   validateState: 'error',
                   validateMessage: '贷款期限最长12个月，以为您变更为12个月',
@@ -251,8 +252,8 @@ function FormDemo() {
   const amountChange = useCallback(
     ({ event, component, value }) => {
       if (value > 10000) {
-        value = '10000'
-        component.setValue(value)
+        value = '10000';
+        component.setValue(value);
         component.setState({
           validateState: 'error',
           validateMessage: '最大申请金额为10000元，已为你自动变更为10000元',
@@ -341,16 +342,37 @@ function FormDemo() {
 
   const btnStyle = isCompleted ? styles.btn : Object.assign({}, styles.btn, styles.btnDisabled);
 
+  const [counter, setCounter] = useState(0);
+
+  const [list, setList] = useState([]);
+  const [values, setValues] = useState("".split(" "))
+
+  useEffect(() => {
+
+    setTimeout(() => {
+      setList([areaList]);
+      // setValues(['浙江省', '绍兴市', '上虞区', 'sdsdf'])
+    }, 1000);
+
+    setInterval(() => {
+      setCounter((counter) => counter + 1);
+    }, 1000);
+  }, []);
+
+  const cancelBtnText = useMemo(() => <font color="red">cancel3</font>, [])
+  const confirmBtnText = useMemo(() => <font color="red">confirm3</font>, [])
+  const list2 = useMemo(() => [[{text: '河南1', value: "10000"},{text: '河南2', value: "100020"}], [{text: '湖南1', value: "10000"},{text: '湖南2', value: "100020"}]], [])
+
   return (
-    <div className={styles['page-view']}>
+    <FlexFixed className={styles['page-view']}>
       <Titlebar theme="b" onBack={goHome}>
-        Form
+        Form {counter}
       </Titlebar>
       <Form
         ref={formRef}
         className={styles['r-form']}
         labelWidth="5.8rem"
-        labelPosition="right"
+        labelPosition="left"
         textPosition="left"
         onComplete={onComplete}
         onChange={handleChange}
@@ -363,6 +385,36 @@ function FormDemo() {
         <Input {...email} onChange={emailChange} />
         <Input {...IDCard} onChange={IDCardChange} />
         <Select2 {...loanTerm} onChange={loanTermChange} />
+
+         <Area
+          title="标题1"
+          detailTitle="详细地址"
+          name="addresss"
+          value="xxx"
+          labelWidth=""
+          labelPosition="left"
+          textPosition="right"
+          appendAfterLabel={icon}
+          areaList={list}
+          areaValues = {values}
+          cancelBtnText={cancelBtnText}
+          confirmBtnText={confirmBtnText}
+          required={true}
+        />
+        <Area
+          title="标题222"
+          name="address2"
+          value="xxx22222"
+          labelWidth=""
+          labelPosition="left"
+          textPosition="right"
+          appendAfterLabel={icon}
+          areaList={list}
+          areaValues = {values}
+          cancelBtnText={cancelBtnText}
+          confirmBtnText={confirmBtnText}
+          required={true}
+        />
         <div style={styles.btnWrap}>
           <div style={btnStyle} onClick={doSubmit}>
             <p>提交（{isCompleted ? '完成' : '未完成'}）</p>
@@ -386,7 +438,7 @@ function FormDemo() {
           );
         })}
       </div>
-    </div>
+    </FlexFixed>
   );
 }
 
