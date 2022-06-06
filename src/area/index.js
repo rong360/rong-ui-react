@@ -84,7 +84,7 @@ const Area = forwardRef((props, ref) => {
     });
   }
 
-  const getValue = () => ({ name, value: _cityValues.join(" ") + " " + _detailValue, title })
+  const getValue = () => ({ name, value: (_cityValues.join(" ") + " " + _detailValue).trim(), title })
   const resetField = () => {
     pickerRef.current.resetField()
     setCityValues(areaValues.slice(0, 3))
