@@ -394,7 +394,6 @@ function FormDemo() {
           labelWidth=""
           labelPosition="left"
           textPosition="right"
-          appendAfterLabel={icon}
           areaList={list}
           areaValues = {values}
           cancelBtnText={cancelBtnText}
@@ -408,7 +407,6 @@ function FormDemo() {
           labelWidth=""
           labelPosition="left"
           textPosition="right"
-          appendAfterLabel={icon}
           areaList={list}
           areaValues = {values}
           cancelBtnText={cancelBtnText}

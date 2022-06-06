@@ -151,7 +151,7 @@ class Select extends React.PureComponent {
     let selectedOption = {}
     this._state.selectedIndex = -1
     for (var i = 0; i < data.length; i++) {
-      if (data[i].value === value) {
+      if (data[i].value == value) {
         selectedOption = data[i]
         this._state.selectedIndex = i
         break

@@ -115,11 +115,11 @@ class Select2 extends React.PureComponent {
       `${prefixCls}-mode-${_mode}`,
       className,
       {
-        [`${prefixCls}-empty`]: value === '',
+        [`${prefixCls}-empty`]: value == '',
         [`${prefixCls}-error`]: this.showErrorMsg,
         [`${prefixCls}-required`]: this.isRequired,
         [`${prefixCls}-readonly`]: !!readonly,
-        [`${prefixCls}-placeholder`]: value === ''
+        [`${prefixCls}-placeholder`]: value == ''
       }
     ])
   }
@@ -134,9 +134,9 @@ class Select2 extends React.PureComponent {
   }
   get labelStyle () {
     let style = {}
-    if (this.labelWidth || this.labelWidth === 0) {
+    if (this.labelWidth || this.labelWidth == 0) {
       style.width = this.labelWidth
-    } else if (this.form && (this.form.labelWidth || this.form.labelWidth === 0)) {
+    } else if (this.form && (this.form.labelWidth || this.form.labelWidth == 0)) {
       style.width = this.form.labelWidth
     }
     return style
@@ -153,7 +153,7 @@ class Select2 extends React.PureComponent {
     let selectedOption = {}
     this._state.selectedIndex = -1
     for (var i = 0; i < data.length; i++) {
-      if (data[i].value === value) {
+      if (data[i].value == value) {
         selectedOption = data[i]
         this._state.selectedIndex = i
         break
@@ -201,7 +201,7 @@ class Select2 extends React.PureComponent {
       <div className={`${prefixCls}-header`}>{pickerTitle}</div>
       <div className={`${prefixCls}-close`} onClick={this.removePicker}></div>
       <div className={classNames([`${prefixCls}-list`, { 'scroll-area': data.length > 6 }])} ref={this.listRef}>
-        {data.map(item => <div className={classNames([`${prefixCls}-item`, { active: item.value === this.state.value }])} key={item.value} onClick={e => this.confirmPicker({ e, value: item.value })}>{item.text}</div>)}
+        {data.map(item => <div className={classNames([`${prefixCls}-item`, { active: item.value == this.state.value }])} key={item.value} onClick={e => this.confirmPicker({ e, value: item.value })}>{item.text}</div>)}
       </div>
     </>
     this._state.picker = Modal.create({
@@ -228,7 +228,7 @@ class Select2 extends React.PureComponent {
     const { initialValue } = this._state
     const { name, title } = this.props
     const rules = this.getFilterRules(trigger)
-    const isInitialValue = this.isRequired && value !== '' && initialValue === value
+    const isInitialValue = this.isRequired && value !== '' && initialValue == value
 
     if (!this.isRequired || isInitialValue) {
       callback()

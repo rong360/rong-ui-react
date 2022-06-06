@@ -8,8 +8,7 @@ import AsyncValidator from 'async-validator'
 const { name, bem } = createNamespace('area')
 
 const Area = forwardRef((props, ref) => {
-  const { title, detailTitle, name, value, placeholder, prepend, append, labelPosition, textPosition, labelWidth, cancelBtnText, confirmBtnText, areaList, areaValues, rules, required, onConfirm, onCancel } = props
-  const [_value, setValue] = useState(value)
+  const { title, detailTitle, name, placeholder, prepend, append, labelPosition, textPosition, labelWidth, cancelBtnText, confirmBtnText, areaList, areaValues, rules, required, onConfirm, onCancel } = props
   const [_labelWidth, setLabelWidth] = useState('')
   const [_cityValues, setCityValues] = useState(areaValues.slice(0, 3))
   const [_detailValue, setDetailValue] = useState(areaValues[3] || '')
